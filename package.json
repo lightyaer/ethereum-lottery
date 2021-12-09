@@ -1,0 +1,19 @@
+{
+  "name": "lottery",
+  "version": "1.0.0",
+  "main": "index.js",
+  "private": true,
+  "license": "MIT",
+  "workspaces": [
+    "blockchain",
+    "web"
+  ],
+  "scripts": {
+    "web:serve": "yarn workspace web serve",
+    "web:build": "yarn workspace web build",
+    "web:lint": "yarn workspace web lint",
+    "blockchain:test": "yarn workspace blockchain test",
+    "blockchain:compile": "yarn workspace blockchain compile",
+    "blockchain:deploy": "yarn workspace blockchain deploy"
+  }
+}
