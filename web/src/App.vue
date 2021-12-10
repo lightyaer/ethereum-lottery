@@ -8,7 +8,7 @@
     to win {{ balance ? web3.utils.fromWei(balance) : 0 }} ether!
   </p>
   <hr />
-  <form @submit.prevent="onSubmit">
+  <form @submit.prevent="enter">
     <h4>Want to try your luck?</h4>
 
     <div>
@@ -20,10 +20,11 @@
   </form>
   <hr />
 
-  <h1>{{ message }}</h1>
+  <h2>{{ message }}</h2>
 
+  <hr />
   <h4>Time to pick a winner?</h4>
-  <button>Pick Winner</button>
+  <button @click="pickWinner">Pick Winner</button>
 </template>
 
 <script setup>
@@ -35,7 +36,9 @@ const manager = ref("");
 const numberOfPlayers = ref(0);
 const balance = ref(null);
 const ether = ref(0);
-const message = ref("");
+const message = ref(
+  "Connect your wallet and send some ether in, minimum is 0.01 ether"
+);
 
 onMounted(async () => {
   manager.value = await lottery.methods.manager().call();
@@ -43,7 +46,7 @@ onMounted(async () => {
   balance.value = await web3.eth.getBalance(lottery.options.address);
 });
 
-const onSubmit = async () => {
+const enter = async () => {
   try {
     const accounts = await web3.eth.getAccounts();
 
@@ -62,6 +65,22 @@ const onSubmit = async () => {
     } else {
       message.value = "Something went wrong, please try again later!";
     }
+  }
+};
+
+const pickWinner = async () => {
+  try {
+    const accounts = await web3.eth.getAccounts();
+
+    message.value = "Waiting to pick Winner....";
+
+    await lottery.methods.pickWinner().send({
+      from: accounts[0],
+    });
+
+    message.value = "A winner has been picked";
+  } catch (error) {
+    console.log(error);
   }
 };
 </script>
